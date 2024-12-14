@@ -11,7 +11,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		41CD2DB82D0E13CA007D96BF /* Exceptions for "QuickNotes" folder in "QuickNotes" target */ = {
+		41CD2E352D0E1CB8007D96BF /* Exceptions for "QuickNotes" folder in "QuickNotes" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -21,10 +21,10 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		41CD2DA82D0E13C8007D96BF /* QuickNotes */ = {
+		41CD2E2E2D0E1CB8007D96BF /* QuickNotes */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				41CD2DB82D0E13CA007D96BF /* Exceptions for "QuickNotes" folder in "QuickNotes" target */,
+				41CD2E352D0E1CB8007D96BF /* Exceptions for "QuickNotes" folder in "QuickNotes" target */,
 			);
 			path = QuickNotes;
 			sourceTree = "<group>";
@@ -45,8 +45,8 @@
 		41CD2D9D2D0E13C8007D96BF = {
 			isa = PBXGroup;
 			children = (
-				41CD2DA82D0E13C8007D96BF /* QuickNotes */,
 				41CD2DA72D0E13C8007D96BF /* Products */,
+				41CD2E2E2D0E1CB8007D96BF /* QuickNotes */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,7 +74,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				41CD2DA82D0E13C8007D96BF /* QuickNotes */,
+				41CD2E2E2D0E1CB8007D96BF /* QuickNotes */,
 			);
 			name = QuickNotes;
 			packageProductDependencies = (
