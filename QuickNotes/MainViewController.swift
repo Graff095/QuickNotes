@@ -54,7 +54,8 @@ class MainViewController: UIViewController {
     
     
     @objc private func addNote() {
-        print("Добавить новую заметку")
+        let createNoteVC = CreateNoteViewController()
+            navigationController?.pushViewController(createNoteVC, animated: true)
     }
     
 }
