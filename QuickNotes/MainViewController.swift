@@ -76,6 +76,16 @@ extension MainViewController:UITableViewDelegate, UITableViewDataSource{
         return cell
     }
     
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            // Удаляем заметку из массива
+            notes.remove(at: indexPath.row)
+            
+            // Удаляем строку из таблицы с анимацией
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+        }
+    }
     
 }
 

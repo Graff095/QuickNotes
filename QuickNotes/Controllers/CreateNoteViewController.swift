@@ -7,11 +7,17 @@
 
 import UIKit
 
+// MARK: - CreateNoteDelegate Протокол для передачи данных обратно на главный экран
+protocol CreateNoteDelegate: AnyObject {
+    func didCreateNote(_ note: Note)
+}
+
 class CreateNoteViewController: UIViewController {
    
-
+    // Делегат для передачи данных
     weak var delegate: CreateNoteDelegate?
     
+    // Текстовое поле для ввода заметки
     private let textView: UITextView = {
            let textView = UITextView()
            textView.font = UIFont.systemFont(ofSize: 16)
@@ -30,6 +36,7 @@ class CreateNoteViewController: UIViewController {
         
     }
     
+    // Настройка интерфейса
     private func setupUI() {
           view.backgroundColor = .systemBackground
           title = "Новая заметка"
@@ -47,18 +54,19 @@ class CreateNoteViewController: UIViewController {
           ])
       }
     
-    
+    // Метод для обработки нажатия кнопки "Сохранить"
     @objc private func saveNote() {
+        
+        // Проверяем, что текст не пустой
         guard let text = textView.text, !text.isEmpty else { return }
+        // Создаем объект заметки
            let newNote = Note(id: UUID(), text: text, date: Date())
-           delegate?.didCreateNote(newNote) // Передаем заметку через делегат
+        // Передаем заметку через делегат
+           delegate?.didCreateNote(newNote)
+        // Возвращаемся на предыдущий экран
            navigationController?.popViewController(animated: true)
        }
 
 
 }
 
-// MARK: - CreateNoteDelegate
-protocol CreateNoteDelegate: AnyObject {
-    func didCreateNote(_ note: Note)
-}
