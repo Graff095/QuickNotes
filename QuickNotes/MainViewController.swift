@@ -55,6 +55,7 @@ class MainViewController: UIViewController {
     
     @objc private func addNote() {
         let createNoteVC = CreateNoteViewController()
+            createNoteVC.delegate = self // Назначаем делегатом
             navigationController?.pushViewController(createNoteVC, animated: true)
     }
     
@@ -76,4 +77,13 @@ extension MainViewController:UITableViewDelegate, UITableViewDataSource{
     }
     
     
+}
+
+
+// MARK: - CreateNoteDelegate
+extension MainViewController: CreateNoteDelegate {
+    func didCreateNote(_ note: Note) {
+        notes.append(note)
+        tableView.reloadData()
+    }
 }

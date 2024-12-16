@@ -8,7 +8,10 @@
 import UIKit
 
 class CreateNoteViewController: UIViewController {
+   
 
+    weak var delegate: CreateNoteDelegate?
+    
     private let textView: UITextView = {
            let textView = UITextView()
            textView.font = UIFont.systemFont(ofSize: 16)
@@ -46,10 +49,16 @@ class CreateNoteViewController: UIViewController {
     
     
     @objc private func saveNote() {
-           // Обработка сохранения заметки (пока только печатаем текст)
-           print("Сохранено: \(textView.text ?? "")")
+        guard let text = textView.text, !text.isEmpty else { return }
+           let newNote = Note(id: UUID(), text: text, date: Date())
+           delegate?.didCreateNote(newNote) // Передаем заметку через делегат
            navigationController?.popViewController(animated: true)
        }
 
 
+}
+
+// MARK: - CreateNoteDelegate
+protocol CreateNoteDelegate: AnyObject {
+    func didCreateNote(_ note: Note)
 }
