@@ -103,6 +103,18 @@ extension MainViewController:UITableViewDelegate, UITableViewDataSource{
         }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        // Получаем выбранную заметку
+        let selectedNote = notes[indexPath.row]
+        
+        // Переходим на NoteDetailViewController
+        let detailVC = NoteDetailViewController()
+        detailVC.note = selectedNote
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
 }
 
 
