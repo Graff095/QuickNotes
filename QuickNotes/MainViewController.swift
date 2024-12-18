@@ -12,6 +12,14 @@ class MainViewController: UIViewController {
     private var tableView: UITableView!
     private var notes: [Note] = []
     
+    // Форматтер для дат
+        private let dateFormatter: DateFormatter = {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .short
+            return formatter
+        }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -72,7 +80,15 @@ extension MainViewController:UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let note = notes[indexPath.row]
-        cell.textLabel?.text = note.text
+        
+        // Форматируем дату
+        let formattedDate = dateFormatter.string(from: note.date)
+        
+        // Отображаем текст заметки и дату
+        cell.textLabel?.numberOfLines = 0
+        cell.textLabel?.text = "\(note.text) \n\(formattedDate)"
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
+        cell.textLabel?.textColor = .label
         return cell
     }
     
