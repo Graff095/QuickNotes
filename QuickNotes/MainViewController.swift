@@ -78,17 +78,27 @@ extension MainViewController:UITableViewDelegate, UITableViewDataSource{
     
     // Что показывать в каждой строке
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        //let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "Cell")
         let note = notes[indexPath.row]
         
         // Форматируем дату
         let formattedDate = dateFormatter.string(from: note.date)
         
         // Отображаем текст заметки и дату
-        cell.textLabel?.numberOfLines = 0
-        cell.textLabel?.text = "\(note.text) \n\(formattedDate)"
-        cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
-        cell.textLabel?.textColor = .label
+            cell.textLabel?.text = note.text
+            cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
+            cell.textLabel?.textColor = .label
+            
+            cell.detailTextLabel?.text = formattedDate
+            cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 14)
+            cell.detailTextLabel?.textColor = .secondaryLabel
+        
+//        // Отображаем текст заметки и дату
+//        cell.textLabel?.numberOfLines = 0
+//        cell.textLabel?.text = "\(note.text) \n\(formattedDate)"
+//        cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
+//        cell.textLabel?.textColor = .label
         return cell
     }
     
@@ -112,6 +122,8 @@ extension MainViewController:UITableViewDelegate, UITableViewDataSource{
         // Переходим на NoteDetailViewController
         let detailVC = NoteDetailViewController()
         detailVC.note = selectedNote
+        detailVC.noteIndex = indexPath.row // Передаём индекс заметки
+        detailVC.delegate = self
         navigationController?.pushViewController(detailVC, animated: true)
     }
     
@@ -124,4 +136,13 @@ extension MainViewController: CreateNoteDelegate {
         notes.append(note)
         tableView.reloadData()
     }
+}
+
+
+// MARK: - NoteDetailDelegate
+extension MainViewController: NoteDetailDelegate {
+    func didUpdateNote(at index: Int, with text: String) {
+           notes[index].text = text // Обновляем текст в массиве
+           tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic) // Обновляем конкретную ячейку
+       }
 }

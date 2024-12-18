@@ -7,9 +7,16 @@
 
 import UIKit
 
+protocol NoteDetailDelegate: AnyObject {
+    func didUpdateNote(at index: Int, with text: String)
+}
+
 class NoteDetailViewController: UIViewController {
 
     var note: Note?
+    var noteIndex: Int?
+    
+    weak var delegate: NoteDetailDelegate?
     
     private let textView: UITextView = {
         let textView = UITextView()
@@ -30,6 +37,12 @@ class NoteDetailViewController: UIViewController {
 // MARK:  Настройка интерфейса
 
     func setupUI () {
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(  title: "Редактировать",
+                                                              style: .plain,
+                                                              target: self,
+                                                              action: #selector(editNote))
+        
         view.backgroundColor = .systemBackground
         title = "Просмотр заметки"
 
@@ -55,6 +68,40 @@ class NoteDetailViewController: UIViewController {
     
     
     
+    
+    @objc private func editNote() {
+        //Разрешаем редактирование текста
+        textView.isEditable = true
+        // Устанавливаем фокус на текстовое поле
+        textView.becomeFirstResponder()
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Сохранить",
+            style: .done,
+            target: self,
+            action: #selector(saveNote)
+        )
+    }
+    
+    
+    @objc private func saveNote() {
+        guard let updatedText = textView.text, !updatedText.isEmpty else {return}
+        
+        // Обновляем текст заметки
+            note?.text = updatedText
+        
+        // Закрываем клавиатуру и запрещаем редактирование
+            textView.isEditable = false
+            navigationItem.rightBarButtonItem = UIBarButtonItem(
+                title: "Редактировать",
+                style: .plain,
+                target: self,
+                action: #selector(editNote)
+            )
+        if let index = noteIndex {
+                   delegate?.didUpdateNote(at: index, with: updatedText)
+               }
+    }
     }
 
 
