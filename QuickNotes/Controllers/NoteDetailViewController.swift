@@ -88,8 +88,8 @@ class NoteDetailViewController: UIViewController {
         guard let updatedText = textView.text, !updatedText.isEmpty else {return}
         
         // Обновляем текст заметки
-            note?.text = updatedText
-        
+      note?.text = updatedText
+       
         // Закрываем клавиатуру и запрещаем редактирование
             textView.isEditable = false
             navigationItem.rightBarButtonItem = UIBarButtonItem(

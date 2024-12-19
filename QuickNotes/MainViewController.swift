@@ -67,11 +67,8 @@ class MainViewController: UIViewController {
     
     
     private func loadNotes() {
-        notes = [
-            Note(id: UUID(), text: "Купить молоко", date: Date()),
-            Note(id: UUID(), text: "Позвонить другу", date: Date()),
-            Note(id: UUID(), text: "Прочитать книгу", date: Date())
-        ]
+        notes = UserDefaults.standard.loadNotes() // Загружаем заметки из UserDefaults
+
     }
     
     
@@ -94,7 +91,6 @@ extension MainViewController:UITableViewDelegate, UITableViewDataSource{
     
     // Что показывать в каждой строке
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "Cell")
         let note = isSearching ? filteredNotes[indexPath.row] : notes[indexPath.row]
 
@@ -117,7 +113,8 @@ extension MainViewController:UITableViewDelegate, UITableViewDataSource{
         if editingStyle == .delete {
             // Удаляем заметку из массива
             notes.remove(at: indexPath.row)
-            
+            // Сохраняем обновлённые заметки
+            UserDefaults.standard.saveNotes(notes)
             // Удаляем строку из таблицы с анимацией
             tableView.deleteRows(at: [indexPath], with: .fade)
             
@@ -145,7 +142,9 @@ extension MainViewController:UITableViewDelegate, UITableViewDataSource{
 extension MainViewController: CreateNoteDelegate {
     func didCreateNote(_ note: Note) {
         notes.append(note)
+        UserDefaults.standard.saveNotes(notes) // Сохраняем обновлённые заметки
         tableView.reloadData()
+
     }
 }
 
@@ -154,6 +153,7 @@ extension MainViewController: CreateNoteDelegate {
 extension MainViewController: NoteDetailDelegate {
     func didUpdateNote(at index: Int, with text: String) {
            notes[index].text = text // Обновляем текст в массиве
+           UserDefaults.standard.saveNotes(notes) // Сохраняем обновлённые заметки
            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic) // Обновляем конкретную ячейку
        }
     
