@@ -11,6 +11,8 @@ class MainViewController: UIViewController {
    
     private var tableView: UITableView!
     private var notes: [Note] = []
+    private var filteredNotes: [Note] = []
+    private var isSearching = false
     
     // Форматтер для дат
         private let dateFormatter: DateFormatter = {
@@ -19,6 +21,9 @@ class MainViewController: UIViewController {
             formatter.timeStyle = .short
             return formatter
         }()
+    
+    private var searchController: UISearchController!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +36,16 @@ class MainViewController: UIViewController {
 
 
     private func  setupUI() {
+        
+        
+        // Настраиваем Search Controller
+           searchController = UISearchController(searchResultsController: nil)
+           searchController.searchResultsUpdater = self
+           searchController.obscuresBackgroundDuringPresentation = false
+           searchController.searchBar.placeholder = "Поиск заметок"
+           navigationItem.searchController = searchController
+           definesPresentationContext = true
+        
         
         // Настраиваем навигацию
             title = "QuickNotes"
@@ -73,15 +88,16 @@ extension MainViewController:UITableViewDelegate, UITableViewDataSource{
    
     //Сколько строк в таблице:
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return notes.count
+        return isSearching ? filteredNotes.count : notes.count
+
     }
     
     // Что показывать в каждой строке
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "Cell")
-        let note = notes[indexPath.row]
-        
+        let note = isSearching ? filteredNotes[indexPath.row] : notes[indexPath.row]
+
         // Форматируем дату
         let formattedDate = dateFormatter.string(from: note.date)
         
@@ -94,11 +110,6 @@ extension MainViewController:UITableViewDelegate, UITableViewDataSource{
             cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 14)
             cell.detailTextLabel?.textColor = .secondaryLabel
         
-//        // Отображаем текст заметки и дату
-//        cell.textLabel?.numberOfLines = 0
-//        cell.textLabel?.text = "\(note.text) \n\(formattedDate)"
-//        cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
-//        cell.textLabel?.textColor = .label
         return cell
     }
     
@@ -145,4 +156,20 @@ extension MainViewController: NoteDetailDelegate {
            notes[index].text = text // Обновляем текст в массиве
            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic) // Обновляем конкретную ячейку
        }
+    
+}
+
+// MARK: - UISearchResultsUpdating
+extension MainViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text, !searchText.isEmpty else {
+            isSearching = false
+            tableView.reloadData()
+            return
+        }
+
+        isSearching = true
+        filteredNotes = notes.filter { $0.text.lowercased().contains(searchText.lowercased()) }
+        tableView.reloadData()
+    }
 }
