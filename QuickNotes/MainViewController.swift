@@ -11,6 +11,7 @@ class MainViewController: UIViewController {
    
     private var tableView: UITableView!
     private var notes: [Note] = []
+   
     private var filteredNotes: [Note] = []
     private var isSearching = false
     
@@ -59,8 +60,7 @@ class MainViewController: UIViewController {
             tableView.delegate = self
 
             // Регистрация ячейки
-            tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-
+            tableView.register(NoteTableViewCell.self, forCellReuseIdentifier: "NoteCell")
             view.addSubview(tableView)
 
     }
@@ -91,22 +91,16 @@ extension MainViewController:UITableViewDelegate, UITableViewDataSource{
     
     // Что показывать в каждой строке
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "Cell")
-        let note = isSearching ? filteredNotes[indexPath.row] : notes[indexPath.row]
-
-        // Форматируем дату
-        let formattedDate = dateFormatter.string(from: note.date)
+       
         
-        // Отображаем текст заметки и дату
-            cell.textLabel?.text = note.text
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
-            cell.textLabel?.textColor = .label
-            
-            cell.detailTextLabel?.text = formattedDate
-            cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 14)
-            cell.detailTextLabel?.textColor = .secondaryLabel
-        
-        return cell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "NoteCell", for: indexPath) as? NoteTableViewCell else {
+               return UITableViewCell()
+           }
+           
+           let note = isSearching ? filteredNotes[indexPath.row] : notes[indexPath.row]
+           cell.configure(with: note, formatter: dateFormatter)
+           return cell
+ 
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
